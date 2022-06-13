@@ -1,0 +1,77 @@
+body {
+    background-color: #C0C0C0;
+    font-family: Arial, Helvetica, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+div {
+    background-color: #131313;
+    color: white;
+    text-align: center;
+    border-radius: 10px;
+    margin: 10px;
+
+
+}
+
+
+.mas {
+    background-color: rgb(29, 180, 82);
+    /* Button +1  */
+
+}
+
+.menos {
+    /* Button -1  */
+    background-color: rgb(148, 22, 22);
+}
+
+.resetear {
+    /* Button Reset  */
+    background-color: rgb(255, 255, 255);
+    color: black;
+    font-weight: bold;
+}
+
+
+h1 {
+    /* Counter */
+    font-size: xx-large !important;
+    color: white;
+}
+
+h1.verde {
+    /*set Counter green */
+    color: green;
+}
+
+h1.rojo {
+    /*set Counter red */
+    color: red;
+}
+
+h1.blanco {
+    /* set Counter white */
+    color: white;
+    font-size: inherit;
+}
+
+
+h1 {
+    /* counter color transition between red, green, and white*/
+    transition: color 0.2s linear 0.1s;
+
+}
+
+.invisible {
+    display: none;
+}
+
+/* To hide and show components */
+
+.visible {
+    display: block;
+}
