@@ -3,11 +3,13 @@
 import database from '../../../firebase';
 import { ref, set } from "firebase/database";
 import { useState, useEffect, useRef } from 'react';
+
 import './CounterApp.css';
-import punto from './assets/punto.mp3';
-import fuego from './assets/fuego.mp3';
-import burro from './assets/burro.mp3';
-import burra from './assets/burra.mp3';
+import punto from '/assets/punto.mp3';
+import punto2 from '/assets/punto2.mp3';
+import fuego from '/assets/fuego.mp3';
+import burro from '/assets/burro.mp3';
+import burra from '/assets/burra.mp3';
 import Timer from '../timer/Timer';
 
 //interface to manage function Props
@@ -21,7 +23,35 @@ let a = false;
 let b = true;
 let c = false;
 
+//set Audios
+let puntoAudio = new Audio(punto);
+let punto2Audio = new Audio(punto2);
+let fuegoAudio = new Audio(fuego);
+let burroAudio = new Audio(burro);
+let burraAudio = new Audio(burra);
+
+
+//dificult levels
+
+let level1 = Math.floor((Math.random() * (10 - 3)) + 3)
+let level2 = Math.floor((Math.random() * (30 - 20)) + 20)
+let level3 = Math.floor((Math.random() * (50 - 40)) + 40)
+
 alert(`Tienes 60 segundos para establecer tu record, no olvides colocar tu nombre al final. Let's Go!`); //Initial Greetings 
+
+
+/* Storing user's device details in a variable*/
+const details = navigator.userAgent;
+
+/* Creating a regular expression 
+containing some mobile devices keywords 
+to search it in details string*/
+const regexp = /android|iphone|kindle|ipad/i;
+
+/* Using test() method to search regexp in details
+it returns boolean value*/
+const isMobileDevice = regexp.test(details);
+
 
 const CounterApp = ({ value }: MyProps) => {
     //useStates variables
@@ -31,13 +61,6 @@ const CounterApp = ({ value }: MyProps) => {
     const [style, setStyle] = useState('blanco');   // to manage counter style
     const [visibleclassName, setvisibleclassName] = useState('visible'); // to manage buttons visibility 
 
-
-
-    //set Audios
-    const puntoAudio = new Audio(punto);
-    const fuegoAudio = new Audio(fuego);
-    const burroAudio = new Audio(burro);
-    const burraAudio = new Audio(burra);
 
     // useRef variables 
     const countRef = useRef(0); // to get reference from counter
@@ -59,7 +82,9 @@ const CounterApp = ({ value }: MyProps) => {
     useEffect(() => {
         const interval = setInterval(() => {
             if (timer >= 60) {
-
+                level1 = Math.floor((Math.random() * (10 - 3)) + 3)
+                level2 = Math.floor((Math.random() * (30 - 20)) + 20)
+                level3 = Math.floor((Math.random() * (50 - 40)) + 40)
                 alert('Se acabo el tiempo!');
                 saveRecord();
                 setTimer(0)
@@ -71,20 +96,23 @@ const CounterApp = ({ value }: MyProps) => {
         }, 1000);
 
         return () => clearInterval(interval);
-    }, [timer, setTimer]);
+    }, [timer, setTimer, level2 ]);
 
     // if to set difficult when the game advance
-    if (counter > 27) {
+
+    if (counter > level2 || counter < 0) {
 
         const intervalToReset = setInterval(() => {
 
-            if (countRef.current < 27) {
+            if (countRef.current < level2 && countRef.current >= 0) {
                 clearInterval(intervalToReset)
             } else {
                 randomNumToReset();
+                clearInterval(intervalToReset)
+
             }
 
-        }, 5438);
+        }, Math.floor((Math.random() * (5 - 3)) + 3) * 1000);
     }
 
     //Alert to get player name when the party finish
@@ -125,17 +153,26 @@ const CounterApp = ({ value }: MyProps) => {
     const masUno = () => ( //add +1 to the counter
 
         setCounter(counter + 1),
-        puntoAudio.pause(),
-        puntoAudio.play(),
+        (isMobileDevice) ? (
+            puntoAudio.currentTime = 0,
+            punto2Audio.play(),
+            setTimeout(() => {
+                punto2Audio.currentTime=0
+            }, 200)
+            ) : (
+            puntoAudio.currentTime = 0, 
+            puntoAudio.play()),
+       
         setStyle('verde'),
         setTimeout(() => {
             setStyle('blanco')
         }, 300),
-        (counter > 5) && (
+        ((counter > level1 && counter < level2) || counter > level3) && (
             (randomNum() == 1) ? (
                 setvisibleclassName('visible')) :
                 setvisibleclassName('invisible'),
             randomNumToReset()
+            
         )
     );
 
@@ -143,19 +180,19 @@ const CounterApp = ({ value }: MyProps) => {
         setCounter(value),
         setStyle('blanco'),
         setvisibleclassName('visible'),
-        (randomNum() == 1) ? (burroAudio.pause(), burroAudio.play()) : (burraAudio.pause(), burraAudio.play())
+        (randomNum() == 1) ? (burroAudio.currentTime = 0, burroAudio.play()) : (burraAudio.currentTime = 0, burraAudio.play())
 
     );
 
     const menosUno = () => (       //subtract -1 to the counter
         setCounter(counter - 1),
-        fuegoAudio.pause(),
+        fuegoAudio.currentTime = 0.2,
         fuegoAudio.play(),
         setStyle('rojo'),
         setTimeout(() => {
             setStyle('blanco')
         }, 300),
-        (counter > 5) && (
+        ((counter > level1 && counter < level2) || counter > level3) && (
             (randomNum() == 1) ? (
                 setvisibleclassName('visible')) :
                 setvisibleclassName('invisible'),
