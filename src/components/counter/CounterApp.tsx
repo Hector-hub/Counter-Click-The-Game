@@ -96,7 +96,7 @@ const CounterApp = ({ value }: MyProps) => {
         }, 1000);
 
         return () => clearInterval(interval);
-    }, [timer, setTimer, level2 ]);
+    }, [timer, setTimer, level2]);
 
     // if to set difficult when the game advance
 
@@ -155,14 +155,11 @@ const CounterApp = ({ value }: MyProps) => {
         setCounter(counter + 1),
         (isMobileDevice) ? (
             puntoAudio.currentTime = 0,
-            punto2Audio.play(),
-            setTimeout(() => {
-                punto2Audio.currentTime=0
-            }, 200)
-            ) : (
-            puntoAudio.currentTime = 0, 
+            punto2Audio.play()
+        ) : (
+            puntoAudio.currentTime = 0,
             puntoAudio.play()),
-       
+
         setStyle('verde'),
         setTimeout(() => {
             setStyle('blanco')
@@ -172,7 +169,7 @@ const CounterApp = ({ value }: MyProps) => {
                 setvisibleclassName('visible')) :
                 setvisibleclassName('invisible'),
             randomNumToReset()
-            
+
         )
     );
 
